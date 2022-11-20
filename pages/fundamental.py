@@ -21,7 +21,12 @@ def get_data(ticker):
     json_data = requests.get(call).json()
     general_data = json_data["General"]
     outstanding_shares_data = pd.DataFrame(json_data["outstandingShares"]["quarterly"]).T
-    return general_data, outstanding_shares_data
+
+    financial_data = json_data["Financials"]
+    income_statement_data = pd.DataFrame(financial_data["Income_Statement"]["quarterly"]).T
+    st.write(income_statement_data)
+
+    return general_data, outstanding_shares_data, income_statement_data
 
 
 def get_ipo_data(ticker, start=start_date, end=today):
@@ -35,7 +40,7 @@ def main():
     ticker, button = inputs()
 
     if button:
-        general_data, outstanding_shares_data = get_data(ticker.upper())
+        general_data, outstanding_shares_data, income_statement_data = get_data(ticker.upper())
         ipo_data = get_ipo_data(ticker.upper())
 
         code = general_data["Code"]
@@ -76,6 +81,21 @@ def main():
             f"IPO Market Cap = outstanding shares*EOD price "
             f"= {outstanding_shares_value} x {ipo_adjusted_close} "
             f"= {ipo_market_cap}"
+        )
+
+        pd.to_datetime(income_statement_data["date"], utc=False)
+        income_statement_data['year'] = pd.DatetimeIndex(income_statement_data['date']).year
+        income_statement_data['quarter'] = pd.DatetimeIndex(income_statement_data['date']).quarter
+        st.write(income_statement_data)
+        income_statement_data = income_statement_data.loc[(income_statement_data["year"] == ipo_year)
+                                                & (income_statement_data["quarter"] == ipo_quarter)]
+        ipo_revenue = income_statement_data["totalRevenue"][0]
+        ipo_ps_ratio = float(ipo_adjusted_close) / (float(ipo_revenue)/float(outstanding_shares_value))
+
+        st.write(
+            f"P/S = adjusted_close / (totalRevenue / shares) "
+            f"= {ipo_adjusted_close} / ({ipo_revenue}/{outstanding_shares_value}) "
+            f"= {ipo_ps_ratio}"
         )
 
 
