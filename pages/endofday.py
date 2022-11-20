@@ -11,7 +11,7 @@ start_date = today - dt.timedelta(365)
 
 def inputs():
     st.sidebar.header("Chart Inputs")
-    ticker = st.sidebar.text_input("Symbol", "AAPL")
+    ticker = st.sidebar.text_input("Symbol", "LULU")
     start = st.sidebar.date_input("Start Date", start_date)
     end = st.sidebar.date_input("End Date", today)
     button = st.sidebar.button("Get Chart")
