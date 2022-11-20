@@ -5,7 +5,8 @@ import plotly.graph_objects as go
 import requests
 import streamlit as st
 
-key = open("api_token.txt").read()
+# key = open("api_token.txt").read()
+key = st.secrets["key"]
 today = dt.date.today()
 start_date = today - dt.timedelta(365 * 10)
 #
