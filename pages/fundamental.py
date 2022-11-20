@@ -24,7 +24,6 @@ def get_data(ticker):
 
     financial_data = json_data["Financials"]
     income_statement_data = pd.DataFrame(financial_data["Income_Statement"]["quarterly"]).T
-    st.write(income_statement_data)
 
     return general_data, outstanding_shares_data, income_statement_data
 
