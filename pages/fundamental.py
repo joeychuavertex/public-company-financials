@@ -62,7 +62,6 @@ def main():
 
         ipo_eod = ipo_data.loc[ipo_data['date'] == general_data["IPODate"]]
         ipo_adjusted_close = ipo_eod["adjusted_close"].values[0]
-        st.write(ipo_eod)
 
         ipo_date = dt.datetime.strptime(ipo_date, '%Y-%m-%d').date()
         ipo_year = pd.Timestamp(ipo_date).year
